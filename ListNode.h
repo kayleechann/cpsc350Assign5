@@ -1,3 +1,10 @@
+/*
+Kaylee Chan
+2348244
+kaychan@chapman.edu
+CPSC 350-03
+Assignment 5
+*/
 #include <iostream>
 using namespace std;
 
@@ -5,7 +12,7 @@ template <typename T>
 class ListNode{
 public:
   T data;
-  ListNode *next; //pointer of type ListNode because its pointer to next ListNode
+  ListNode *next; 
 
   ListNode();
   ListNode(T d);

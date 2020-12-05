@@ -1,3 +1,10 @@
+/*
+Kaylee Chan
+2348244
+kaychan@chapman.edu
+CPSC 350-03
+Assignment 5
+*/
 #include "Faculty.h"
 
 Faculty::Faculty(){
@@ -100,7 +107,6 @@ void Faculty::addAdvisee(int ID){
   }else {
     if(numAdvisee == maxSize) {
       int *tempArray = new int[numAdvisee];
-
       for(int i = 0; i < numAdvisee; ++i) {
         tempArray[i] = adviseeArray[i];
       }
@@ -115,11 +121,11 @@ void Faculty::addAdvisee(int ID){
       for(int i = numAdvisee; i < numAdvisee + 1; ++i) {
         adviseeArray[i] = -1;
       }
-
       adviseeArray[++numAdvisee] = ID;
     }
   }
 }
+
 bool Faculty::removeAdvisee(int adviseeID){
   //advisees->deletePos(adviseeID);
   bool removed = false;
@@ -130,14 +136,11 @@ bool Faculty::removeAdvisee(int adviseeID){
       --numAdvisee;
       removed = true;
     }
-
     if(!removed) {
-      cout << "Advisee Succesfully Removed" << endl;
+      cout << "Advisee removed" << endl;
     }
-
     return removed;
   }
-
 }
 
 int Faculty::getSizeArray() {

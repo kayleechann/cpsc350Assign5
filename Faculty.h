@@ -1,3 +1,10 @@
+/*
+Kaylee Chan
+2348244
+kaychan@chapman.edu
+CPSC 350-03
+Assignment 5
+*/
 #include <iostream>
 #include "SinglyLinkedList.h"
 using namespace std;

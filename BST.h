@@ -1,3 +1,10 @@
+/*
+Kaylee Chan
+2348244
+kaychan@chapman.edu
+CPSC 350-03
+Assignment 5
+*/
 #include <iostream>
 #include "TreeNode.h"
 using namespace std;
@@ -10,19 +17,21 @@ protected:
 
   public:
     BST();
-    virtual ~BST();
+    ~BST();
 
-    bool contains(int k); //Checks if Contains
-    T* find(int k); //Find (same as Contain but different return type)
-    void put(TreeNode<T> *node); //Insert
+    bool searchNode(int k); //returns boolean if element is in tree
+    T* search(int k); // returns element itself if element is in tree
+    void put(TreeNode<T> *node);
+    TreeNode<T>* getSuccessor(TreeNode<T> *d);
+    bool deleteNode(int k);
 
-    TreeNode<T>* getSuccessor(TreeNode<T> *d); //TreeNode *d represents the node we are deleting
-    bool erase(int k); //Delete
-
+    //Auxiliary functions
+    /* this function will play a role when deleting a node.
+    *d represents a node to be deleted */
     T* getMin();
     T* getMax();
 
-    void printRecursive(TreeNode<T> *node);
+    void recPrint(TreeNode<T> *node);
     void printTree();
 
     TreeNode<T>* getRoot();
@@ -30,33 +39,62 @@ protected:
     bool isEmpty();
   };
 
-  template <class T>
+  template <typename T>
   BST<T>::BST() {
     root = NULL;
     size = 0;
   }
 
-  template <class T>
+  template <typename T>
   BST<T>::~BST() {
 
   }
 
-  template <class T>
-  bool BST<T>::contains(int k) {
-    if(root == NULL) {
+  template <typename T>
+  void BST<T>::recPrint(TreeNode<T> *node) {
+    if(node == NULL) {
+      return;
+    }
+
+    recPrint(node->left);
+    cout << node->key << endl;
+    recPrint(node->right);
+  }
+
+
+  template <typename T>
+  void BST<T>::printTree() {
+    recPrint(root);
+  }
+
+  template <typename T>
+  TreeNode<T>* BST<T>::getRoot() {
+    return root;
+  }
+
+  template <typename T>
+  int BST<T>::getSize() {
+    return size;
+  }
+
+  template <typename T>
+  bool BST<T>::isEmpty() {
+    return(size == 0);
+  }
+
+  template <typename T>
+  bool BST<T>::searchNode(int k) {
+    if(isEmpty()) {
       return false;
     }
 
     TreeNode<T> *curr = root;
-
     while(curr->key != k) {
       if(k < curr->key) {
         curr = curr->left;
-      }
-      else {
+      }else {
         curr = curr->right;
       }
-
       if(curr == NULL) {
         return false;
       }
@@ -64,20 +102,19 @@ protected:
     return true;
   }
 
-  template <class T>
-  T* BST<T>::find(int k) {
+  template <typename T>
+  T* BST<T>::search(int k) {
     if(root == NULL) {
       return NULL;
     }
 
-    if(contains(k)) {
+    if(searchNode(k)) {
       TreeNode<T> *curr = root;
 
       while(curr->key != k) {
         if(k < curr->key) {
           curr = curr->left;
-        }
-        else {
+        }else {
           curr = curr->right;
         }
 
@@ -92,7 +129,7 @@ protected:
     }
   }
 
-  template <class T>
+  template <typename T>
   void BST<T>::put(TreeNode<T> *node) {
     if(root == NULL) {
       root = node;
@@ -109,8 +146,7 @@ protected:
               parent->left = node;
               break;
           }
-        }
-        else {
+        }else {
           if(node->key > curr->key) {
             curr = curr->right;
             if(curr == NULL) {
@@ -124,110 +160,104 @@ protected:
     ++size;
   }
 
-  template <class T>
+  template <typename T>
   TreeNode<T>* BST<T>::getSuccessor(TreeNode<T> *d) {
-    TreeNode<T> *sp = d;
+    TreeNode<T> * sp = d; //sp = successor's parent
     TreeNode<T> *successor = d;
-    TreeNode<T> *curr = d->right;
+    TreeNode<T> *current = d->right;
 
-    while(curr != NULL) {
+    while(current != NULL){
       sp = successor;
-      successor = curr;
-      curr = curr->left;
+      successor = current;
+      current = current->left;
     }
 
-    if(successor != d->right) {
+    if(successor != d->right){
       sp->left = successor->right;
       successor->right = d->right;
     }
-
     return successor;
   }
 
-  template <class T>
-  bool BST<T>::erase(int k) {
-    if(root == NULL) {
-        return false;
-    }
-
-    TreeNode<T> *curr = root;
-    TreeNode<T> *parent = root;
-    bool isLeft = true;
-
-    while(curr->key != k) {
-      parent = curr;
-
-      if(k < curr->key) {
-        isLeft = true;
-        curr = curr->left;
-      }
-      else {
-        isLeft = false;
-        curr = curr->right;
-      }
-
-      if(curr == NULL) {
+  template <typename T>
+  bool BST<T>::deleteNode(int k) {
+      if(isEmpty()){  //root == NULL
         return false;
       }
-    }
-    //We have found the node we want to delete
+      //invoke search to determine whether it exists or not
+      TreeNode<T> *parent = NULL;
+      TreeNode<T> *curr = root;
+      bool isLeftNode = true;
 
-    //Delete a Node with No Children
-    if(curr->left == NULL && curr->right == NULL) {
-      if(curr == root) {
-        root = NULL;
-      }
-      else if(isLeft) {
-        parent->left = NULL;
-      }
-      else {
-        parent->right = NULL;
-      }
-    }
-    //One Child (to the Left)
-    else if(curr->right == NULL) {
-      if(curr == root) {
-        root = curr->left;
-      }
-      else if(isLeft) {
-        parent->left = curr->left;
-      }
-      else {
-        parent->right = curr->right;
-      }
-    }
-    //One Child (to the Right)
-    else if(curr->left == NULL) {
-      if(curr == root) {
-        root = curr->right;
-      }
-      else if(isLeft) {
-        parent->left = curr->right;
-      }
-      else {
-        parent->right = curr->right;
-      }
-    }
-    //Two Children
-    else {
-      TreeNode<T> *successor = getSuccessor(curr);
+      while(curr->key != k){
+        parent = curr;
 
-      if(curr == root) {
-        root = successor;
+        if(k < curr->key){
+          isLeftNode = true;
+          curr = curr->left;
+        }else{
+          isLeftNode = false;
+          curr = curr->right;
+        }
+
+        if(curr == NULL){
+          return false; //value does not exist
+        }
+
+        //at this point, we have found our key/value. now let's proceed to delete this node
       }
-      else if(isLeft) {
-        parent->left = successor;
+
+      //case 1: node to be deleted does not have children, AKA a leaf node
+      if(curr->left == NULL && curr->right == NULL){
+        if(curr == root){
+          root = NULL;
+        }else if(isLeftNode){
+          parent->left = NULL;
+        }else{
+          parent->right = NULL;
+        }
+        //case 2: node to be deleted has one child. need to deterimine whether descendant is left or right
+      }else if(curr->right == NULL){
+        //does not have a right child, must have left
+        if(curr == root){
+          root = curr->left;
+        }else if(isLeftNode){
+          parent->left = curr->left;
+        }else{
+          //node to be deleted is a right child
+          parent->right = curr->left;
+        }
+      }else if(curr->left == NULL){
+        //does not have a left child, must have right child
+        if(curr == root){
+          root = curr->right;
+        }else if(isLeftNode){
+          parent->left = curr->right;
+        }else{
+          //node to be deleted is a right child
+          parent->right = curr->right;
+        }
+      }else{
+        //node to be deleted has two children. at this point, we begin to cry.
+        //we have to find the successor .
+
+        TreeNode<T> *successor = getSuccessor(curr); //current is the node to be deleted
+
+        if(curr == root){
+          root = successor;
+        }else if(isLeftNode){
+          parent->left = successor;
+        }else{
+          parent->right = successor;
+          successor ->left = curr->left;
+        }
       }
-      else {
-        parent->right = successor;
-      }
-      successor->left = curr->left;
-    }
-    --size;
-    return true;
+      //delete  curr????? could be exam question on final?
+      //do we need to delete (garbage collect) in this function or do we do soemthing special in the destructor??
+      return true;
   }
 
-  template <class T>
+  template <typename T>
   T* BST<T>::getMin() {
     TreeNode<T> *curr = root; //Start at root
 
@@ -242,7 +272,7 @@ protected:
     return curr;
   }
 
-  template <class T>
+  template <typename T>
   T* BST<T>::getMax() {
     TreeNode<T> *curr = root;
 
@@ -255,36 +285,4 @@ protected:
     }
 
     return curr;
-  }
-
-  template <class T>
-  void BST<T>::printRecursive(TreeNode<T> *node) {
-    if(node == NULL) {
-      return;
-    }
-
-    printRecursive(node->left);
-    cout << node->key << endl;
-    printRecursive(node->right);
-  }
-
-
-  template <class T>
-  void BST<T>::printTree() {
-    printRecursive(root);
-  }
-
-  template <class T>
-  TreeNode<T>* BST<T>::getRoot() {
-    return root;
-  }
-
-  template <class T>
-  int BST<T>::getSize() {
-    return size;
-  }
-
-  template <class T>
-  bool BST<T>::isEmpty() {
-    return(size == 0);
   }

@@ -22,9 +22,11 @@ Assignment 5 <br/>
 - Transaction.h
 - main.cpp
 
-3. Rollback doesn't work :( No known runtime errors for the other functions. 
+3. Rollback doesn't work :( No known runtime errors for the other functions.
 
 4. References
+- Converting string to integer
+  - https://stackoverflow.com/questions/2846501/atol-atof-atoi-function-behaviours-is-there-a-stable-way-to-convert-fro
 - Used to fix a compiling error with template
   - https://stackoverflow.com/questions/18186878/invalid-use-of-template-name-without-an-argument-list
 - Using cin.fail()
