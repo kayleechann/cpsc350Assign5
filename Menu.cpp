@@ -6,6 +6,7 @@
 #include <sstream>
 #include "Menu.h"
 
+
 Menu::Menu() {
   // masterStudent = new BST<Student>();
   // masterFaculty = new BST<Faculty>();
@@ -36,7 +37,7 @@ void Menu::menuOptions() {
     cout << "12. Remove an advisee from a faculty member given the ids " << endl;
     cout << "13. Rollback " << endl;
     cout << "14. Exit " << endl;
-    cout << "\nPlease Select a Menu Option: ";
+    cout << "\n Select a Menu Option: ";
     cin >> option;
 
     if(option == 1){
@@ -72,7 +73,6 @@ void Menu::menuOptions() {
       cout << "Not an option. Try entering a number from 1-14! " << endl << endl;
     }
   }
-
 }
 
 void Menu::readStudentFile() {
@@ -83,7 +83,6 @@ void Menu::readStudentFile() {
   int totalFaculty = 0;
   int totalAdvisee = 0;
   int numLine = 1;
-
   int srID = 0;
   string sname = "";
   string slevel = "";
@@ -93,16 +92,6 @@ void Menu::readStudentFile() {
 
   MSFile.open("studentTable.txt");
   if(MSFile.is_open()) {
-    // try {
-    //   getline(MSFile, input);
-    //
-    //   if(input != "") {
-    //     numStudent = atoi(input.c_str());
-    //   }
-    // }
-    // catch(exception e) {
-    //   cout << "\nIncorrect File Format" << endl;
-    // }
     for(int i = 0; i < (7 * numStudent); ++i) {
       getline(MSFile, s);
       switch(numLine) {
@@ -144,7 +133,6 @@ void Menu::readStudentFile() {
         case 7: {
           try {
             advisorID = atoi(s.c_str());
-
             Student *student = new Student(srID, sname, slevel, smajor, gpa, advisorID);
             TreeNode<Student> *studentNode = new TreeNode<Student>(student, srID);
             masterStudent.put(studentNode);
@@ -157,7 +145,6 @@ void Menu::readStudentFile() {
         default:
           break;
       }
-
       ++numLine;
       if(numLine > 7) {
         numLine = 1;
@@ -185,7 +172,6 @@ void Menu::readFacultyFile(){
     int totalAdvisee = 0;
     int numLine = 1;
 
-    //Faculty Import
     MFFile.open("facultyTable.txt");
 
     if(MFFile.is_open()) {
@@ -199,8 +185,6 @@ void Menu::readFacultyFile(){
       catch(exception e) {
         cout << "\nIncorrect File Format" << endl;
       }
-
-      //Reads the imported file and distributes the lines to their correct variables
       while(getline(MFFile, input)) {
         switch(numLine) {
           case 1: {
@@ -259,9 +243,7 @@ void Menu::readFacultyFile(){
           default:
             break;
         }
-
         ++numLine;
-
         if(totalFaculty == numFaculty) {
           break;
         }
@@ -272,36 +254,28 @@ void Menu::readFacultyFile(){
     }else {
       cout << "\nNo 'facultyTable.txt' found! Will start with empty database." << endl;
     }
-
     MFFile.close();
 }
 
 void Menu::serializeFiles() {
   ofstream writeMS;
   ofstream writeMF;
-
-  //Student
   writeMS.open("studentTable.txt");
   if(writeMS.is_open()) {
     writeMS << masterStudent.getSize() << endl;
     TreeNode<Student> *s = masterStudent.getRoot();
     outputMS(s);
   }
-
   writeMS.close();
-
-  //Faculty
   writeMF.open("facultyTable.txt");
   if(writeMF.is_open()) {
     writeMF << masterFaculty.getSize() << endl;
     TreeNode<Faculty> *f = masterFaculty.getRoot();
     outputMF(f);
   }
-
   writeMF.close();
 }
 
-//traverses the tree to print the students
 void Menu::printMS(TreeNode<Student> *s) {
   if(s != NULL) {
     if(s->left != NULL) {
@@ -317,7 +291,7 @@ void Menu::printMS(TreeNode<Student> *s) {
   }
 }
 
-//traveses the tree to print the faculty
+
 void Menu::printMF(TreeNode<Faculty> *f) {
   if(f != NULL) {
     if(f->left != NULL) {
@@ -333,7 +307,7 @@ void Menu::printMF(TreeNode<Faculty> *f) {
   }
 }
 
-//outputs the students to the file to be used when opening the program again
+
 void Menu::outputMS(TreeNode<Student> *s) {
   ofstream outFacFile;
   outFacFile.open("studentTable.txt");
@@ -361,7 +335,6 @@ void Menu::outputMS(TreeNode<Student> *s) {
   outFacFile.close();
 }
 
-//outputs the faculty to the file to be used when opening the program again
 void Menu::outputMF(TreeNode<Faculty> *f) {
   ofstream outSFile;
   outSFile.open("facultyTable.txt");
@@ -404,7 +377,6 @@ TreeNode<Faculty>* Menu::getMFRoot() {
 }
 
 
-//go through the tree printing all the students IN ORDER
 void Menu::printStudentsInOrder() {
   if(masterStudent.isEmpty()) {
     cout << "\nStudent Database is Empty" << endl;
@@ -414,7 +386,6 @@ void Menu::printStudentsInOrder() {
   }
 }
 
-//go through the tree printing all the faculty IN ORDER
 void Menu::printFacultyInOrder() {
   if(masterFaculty.isEmpty()) {
     cout << "\nFaculty Database is Empty" << endl;
@@ -442,7 +413,6 @@ void Menu::displayStudent() {
   }
 }
 
-//Prints a single faculty member and their information that the user chooses
 void Menu::displayFaculty() {
   int id;
   if(masterFaculty.isEmpty()) {
@@ -461,7 +431,6 @@ void Menu::displayFaculty() {
   }
 }
 
-//prints an advisor given a student ID number from the user
 void Menu::printAdvisor() {
   int printingAd;
   if(masterStudent.isEmpty()) {
@@ -481,7 +450,6 @@ void Menu::printAdvisor() {
   }
 }
 
-//prints an advisee information given the faculty ID user provides
 void Menu::printAdvisees(){
   int showadvisee;
   if(masterFaculty.isEmpty()) {
@@ -509,7 +477,6 @@ void Menu::printAdvisees(){
   }
 }
 
-//allows the user to add a student to the records
 void Menu::addStudent() {
   string name;
   string level;
@@ -580,9 +547,10 @@ void Menu::addStudent() {
   Student *student = new Student(newID, name, level, major, gpa, advisorID);
   TreeNode<Student> *studentNode = new TreeNode<Student>(student, newID);
   masterStudent.put(studentNode);
+  // Transaction<Student> *t = new Transaction<Student>(newID, "insert");
+  // reverseStudent.push(*t);
 }
 
-//allows the user to input a student ID number and delete that student from the records
 void Menu::deleteStudent() {
   int deleteSID;
 
@@ -606,17 +574,15 @@ void Menu::deleteStudent() {
   }
 }
 
-//allows the user to add a faculty member to the records
 void Menu::addFaculty() {
   int numAdvisees = 0;
   string name;
   string level;
   string department;
   int sID = 0;
-  int max = 1000;
-  int min = 5000;
+  int max = 5000;
+  int min = 1000;
   bool idexists = false;
-  //Generate Faculty ID
 
   srand(time(NULL));
   int range = max - min + 1;
@@ -679,7 +645,6 @@ void Menu::addFaculty() {
   masterFaculty.put(fNode);
 }
 
-//allows the user to delete a faculty member from the records given an ID number and transfer their advisees to a new advisor
 void Menu::deleteFaculty() {
   int deleteID = 0;
   int transferID = 0;
@@ -718,8 +683,6 @@ void Menu::deleteFaculty() {
   }
 }
 
-//allows the user to change the advisor of a student from one faculty member
-// to another given all the IDs neccessary
 void Menu::changeAdvisor() {
   int toNewAdvisor = 0;
   int changetofaculty = 0;
@@ -751,7 +714,6 @@ void Menu::changeAdvisor() {
   }
 }
 
-//allows the user to remove an advisee from an advisor given the ID numbers of both
 void Menu::removeAdvisee() {
   int thefaculty = 0;
   int removingAdvisee = 0;
@@ -806,12 +768,10 @@ void Menu::removeAdvisee() {
   }
 }
 
-//allows the user to undo the last five commands they did
 void Menu::rollback() {
-
+//
 }
 
-//exits the program
 void Menu::exit() {
-  cout << "EXITING PROGRAM..." << endl;
+  cout << "*******Exiting program*******" << endl;
 }

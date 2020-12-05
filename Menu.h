@@ -2,7 +2,8 @@
 #include "Student.h"
 #include "Faculty.h"
 #include "BST.h"
-//#include "GenStack.h"
+#include "GenStack.h"
+#include "Transaction.h"
 
 using namespace std;
 
@@ -10,6 +11,8 @@ class Menu {
   public:
     BST<Student> masterStudent;
     BST<Faculty> masterFaculty;
+    // GenStack<Student> reverseStudent = new GenStack<Student>();
+    // GenStack<Faculty> reverseFaculty;
 
     Menu();
     ~Menu();

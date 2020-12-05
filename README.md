@@ -19,14 +19,20 @@ Assignment 5 <br/>
 - Faculty.cpp
 - Menu.h
 - Menu.cpp
+- Transaction.h
 - main.cpp
 
-3. No known compile/runtime errors.
+3. Rollback doesn't work :( No known runtime errors for the other functions. 
 
 4. References
 - Used to fix a compiling error with template
   - https://stackoverflow.com/questions/18186878/invalid-use-of-template-name-without-an-argument-list
--
+- Using cin.fail()
+  - https://stackoverflow.com/questions/17928865/correct-way-to-use-cin-fail
+- Generate random number
+  - https://stackoverflow.com/questions/7560114/random-number-c-in-some-range
+- Overloading
+  - https://stackoverflow.com/questions/10575766/comparison-operator-overloading
 - Used Rene's Stack, LinkedList, and BST implementation
 
 5. Instructions for running assignment:
