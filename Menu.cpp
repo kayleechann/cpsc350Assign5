@@ -152,7 +152,7 @@ void Menu::addStudent() {
 
   Student *student = new Student(newID, name, level, major, gpa, advisorID);
   TreeNode<Student> *studentNode = new TreeNode<Student>(student, newID);
-  masterStudent.put(studentNode);
+  masterStudent.insertNode(studentNode);
   // Transaction<Student> *t = new Transaction<Student>(newID, "insert");
   // reverseStudent.push(*t);
 }
@@ -242,7 +242,7 @@ void Menu::readStudentFile() {
             }else{
             Student *student = new Student(id, name, level, major, gpa, advisorID);
             TreeNode<Student> *studentNode = new TreeNode<Student>(student, id);
-            masterStudent.put(studentNode);
+            masterStudent.insertNode(studentNode);
           }
           break;
         }
@@ -338,7 +338,7 @@ void Menu::readFacultyFile(){
             }
 
             TreeNode<Faculty> *facultyNode = new TreeNode<Faculty>(faculty, id);
-            masterFaculty.put(facultyNode);
+            masterFaculty.insertNode(facultyNode);
             break;
           }
           default:
@@ -650,7 +650,7 @@ void Menu::addFaculty() {
   }
 
   TreeNode<Faculty> *fNode = new TreeNode<Faculty>(faculty, fID);
-  masterFaculty.put(fNode);
+  masterFaculty.insertNode(fNode);
 }
 
 //delete faculty member in database

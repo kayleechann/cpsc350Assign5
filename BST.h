@@ -21,7 +21,7 @@ protected:
 
     bool searchNode(int k); //returns boolean if element is in tree
     T* search(int k); // returns element itself if element is in tree
-    void put(TreeNode<T> *node);
+    void insertNode(TreeNode<T> *node);
     TreeNode<T>* getSuccessor(TreeNode<T> *d);
     bool deleteNode(int k);
 
@@ -130,7 +130,7 @@ protected:
   }
 
   template <typename T>
-  void BST<T>::put(TreeNode<T> *node) {
+  void BST<T>::insertNode(TreeNode<T> *node) {
     if(root == NULL) {
       root = node;
     }
