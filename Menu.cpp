@@ -94,7 +94,7 @@ void Menu::addStudent() {
   int max = 999;
   int min = 100;
 
-  //studentID ------ strictly is an integer from 100 to 999
+  //generating random studentID ------ strictly is an integer from 100 to 999
   srand(time(NULL));
   int range = max - min + 1;
   int newID = rand() % range + min;
@@ -111,7 +111,7 @@ void Menu::addStudent() {
 
   cout << "\nStudent ID: " << newID << endl;
   cin.fail();
-  cout << "Enter student's  name: " ;
+  cout << "Enter student's name: " ;
   cin.ignore();
   getline(cin, name);
   cout << "Enter student's level: ";
@@ -157,6 +157,7 @@ void Menu::addStudent() {
   // reverseStudent.push(*t);
 }
 
+//delete student
 void Menu::deleteStudent() {
   int deleteSID;
 
@@ -201,6 +202,7 @@ void Menu::readStudentFile() {
     //read all lines
     for(int i = 0; i < (7 * numStudent); ++i) {
       getline(MSFile, s);
+      //read file and intialize database with information
       switch(numLine) {
         case 1: {
           if(s != "--") {
@@ -504,6 +506,7 @@ void Menu::displayStudent() {
     while(true) {
       cout << "\nPlease Provide a Student ID: ";
       cin >> id;
+      //check if student is in database
         if(masterStudent.searchNode(id)) {
           masterStudent.search(id)->printStudent();
           break;
@@ -523,6 +526,7 @@ void Menu::displayFaculty() {
     while(true) {
       cout << "\nPlease enter the faculty id to be displayed: ";
       cin >> id;
+      //check if faculty is in database
         if(masterFaculty.searchNode(id)) {
           masterFaculty.search(id)->printFaculty();
           break;
@@ -562,7 +566,7 @@ void Menu::printAdvisees(){
     while(true) {
       cout << "\nEnter the faculty id for which you'd like to see the advisees: ";
       cin >> showadvisee;
-
+      //make sure that faculty is in database
         if(masterFaculty.searchNode(showadvisee)) {
           Faculty *faculty = masterFaculty.search(showadvisee);
           for(int i = 0; i < faculty->getSizeArray(); ++i) {
@@ -594,7 +598,7 @@ void Menu::addFaculty() {
 
   srand(time(NULL));
   int range = max - min + 1;
-  int fID = rand() % range + min; //facultyId ------ strictly is an integer from 1000 to 5000
+  int fID = rand() % range + min; //randomly generated facultyId ------ strictly is an integer from 1000 to 5000
 
   while(idexists == false){
     if(masterFaculty.searchNode(fID) == false){
@@ -627,15 +631,11 @@ void Menu::addFaculty() {
         cout << "ERROR: invalid number of advisees. Please enter a number >0 " << endl;
       }
     }
-
-    if(numAdvisees != 0) {
-      cout << "\nHere is a list of students in database: " << endl;
-      printStudentsInOrder();
-    }
-
+    //for the given number of inputted advisees by the user
+    //it will loop that many times and ask user to input advisees
     for(int i = 0; i < numAdvisees; ++i) {
       while(true) {
-        cout << "[" << numAdvisees << " Remaining] Please Provide a Student ID: ";
+        cout << "Provide student id: " << endl;
         cin >> sID;
           if(masterStudent.searchNode(sID)) {
             faculty->addAdvisee(sID);
@@ -653,23 +653,31 @@ void Menu::addFaculty() {
   masterFaculty.put(fNode);
 }
 
+//delete faculty member in database
 void Menu::deleteFaculty() {
   int deleteID = 0;
   int transferID = 0;
 
+  //check if faculty database is empty
   if(masterFaculty.isEmpty()) {
     cout << "\nFaculty database is empty. Nothing to delete!" << endl;
   }else {
     while(true) {
       cout << "\nPlease provide ID of faculty to be deleted: ";
       cin >> deleteID;
+      //check if faculty exists in database
         if(masterFaculty.searchNode(deleteID)) {
+          //check if the number of advisees that the faculty has is >0
           if(masterFaculty.search(deleteID)->numAdvisee > 0) {
             while(true) {
+              //following referential integrity!
+              //transfer advisees first so that they still have an advisor
               cout << "\nEnter faculty ID to move advisee to: ";
               cin >> transferID;
+              //transfer advisee
                 if(masterFaculty.searchNode(transferID)) {
                   for(int i = 0; i < masterFaculty.search(deleteID)->maxSize; ++i) {
+                    //make sure that faculty has an advisee
                     if(masterFaculty.search(deleteID)->adviseeArray[i] != -1) {
                       masterStudent.search(masterFaculty.search(deleteID)->adviseeArray[i])->setAdvisor(transferID);
                     }
@@ -680,6 +688,7 @@ void Menu::deleteFaculty() {
                 break;
             }
           }else{
+            //proceed to delete faculty
             masterFaculty.deleteNode(deleteID);
             break;
           }
@@ -691,10 +700,12 @@ void Menu::deleteFaculty() {
   }
 }
 
+//change student's advisor
 void Menu::changeAdvisor() {
   int toNewAdvisor = 0;
   int changetofaculty = 0;
 
+  //output message is database is empty
   if(masterFaculty.isEmpty() || masterStudent.isEmpty()) {
     cout << "\nEither Studnet or Faculty database is empty. Nothing to change" << endl;
   }else {
@@ -702,10 +713,12 @@ void Menu::changeAdvisor() {
       cout << "\nTo change advisor, please enter the student ID: ";
       cin >> toNewAdvisor;
 
+      //check if student is in database
         if(masterStudent.searchNode(toNewAdvisor)) {
           while(true) {
             cout << "\nPlease Provide a Faculty ID: ";
             cin >> changetofaculty;
+            //check if the provided faculty id is in databse
               if(masterFaculty.searchNode(changetofaculty)) {
                 break;
               } else {
@@ -722,6 +735,7 @@ void Menu::changeAdvisor() {
   }
 }
 
+//used to remove advisee
 void Menu::removeAdvisee() {
   int thefaculty = 0;
   int removingAdvisee = 0;
@@ -729,14 +743,16 @@ void Menu::removeAdvisee() {
   if(masterFaculty.isEmpty() || masterStudent.isEmpty()) {
     cout << "\nStudent and/or Faculty Database is Empty" << endl;
   }else {
-    while(true) {
+    while(true) { //if database isn't empty then proceed
       cout << "\nPlease Provide a Faculty ID: ";
       cin >> thefaculty;
 
+      //check is faculty id is in databse
         if(masterFaculty.searchNode(thefaculty)) {
           while(true) {
             cout << "\nPlease Provide a Student ID: ";
             cin >> removingAdvisee;
+            //check if advisee is a real student in the database
               if(masterStudent.searchNode(removingAdvisee)) {
                 break;
               }else {
@@ -752,7 +768,6 @@ void Menu::removeAdvisee() {
     if(masterFaculty.search(thefaculty)->removeAdvisee(removingAdvisee)) {
       masterStudent.search(removingAdvisee)->setAdvisor(-1);
     }
-
     char c;
     cout << "\nWoudld you like the advisee to have a new advisor? (y/n) ";
     cin >> c;
@@ -774,9 +789,10 @@ void Menu::removeAdvisee() {
 }
 
 void Menu::rollback() {
-//
+//rollback implementation doesn't work :'(
 }
 
+//exit program and output message to user
 void Menu::exit() {
   cout << "*******Exiting program*******" << endl;
 }
